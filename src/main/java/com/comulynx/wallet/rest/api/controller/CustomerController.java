@@ -3,7 +3,9 @@ package com.comulynx.wallet.rest.api.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.comulynx.wallet.rest.api.repository.WebuserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,9 @@ public class CustomerController {
 	@Autowired
 	private AccountRepository accountRepository;
 
+	@Autowired
+	private WebuserRepository webuserRepository;
+
 	/**
 	 * 
 	 * Login
@@ -44,9 +49,7 @@ public class CustomerController {
 	@PostMapping("/login")
 	public ResponseEntity<?> customerLogin(@RequestBody String request) {
 		try {
-
 			return ResponseEntity.status(200).body(HttpStatus.OK);
-
 		} catch (Exception ex) {
 			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -70,10 +73,12 @@ public class CustomerController {
 	@PostMapping("/create")
 	public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
 		try {
-			// TODO : Add logic to Hash Customer PIN here
-			// TODO : Add logic to check if Customer with provided username, or
-			// customerId exists. If exists, throw a Customer with [?] exists
-			// Exception.
+
+			String found = "";
+			if(customerRepository.findByCustomerId(customer.getCustomerId()).isPresent()) found = "Customer ID";
+			if(customerRepository.findByUserName(customer.getUserName()).isPresent()) found = "UserName";
+
+			if(!found.equals(""))throw new Exception("Customer with "+found+ "Exists");
 
 			String accountNo = generateAccountNo(customer.getCustomerId());
 			Account account = new Account();
@@ -120,8 +125,7 @@ public class CustomerController {
 	 * 
 	 */
 	private String generateAccountNo(String customerId) {
-		// TODO : Add logic here - generate a random but unique Account No (NB:
-		// Account No should be unique in the accounts table)
-		return "";
+		UUID uniqueKey = UUID.randomUUID();
+		return customerId+"#"+uniqueKey.toString();
 	}
 }

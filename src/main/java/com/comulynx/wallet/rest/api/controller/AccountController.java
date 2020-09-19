@@ -1,6 +1,7 @@
 package com.comulynx.wallet.rest.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,9 +57,10 @@ public class AccountController {
 			String customerId = balanceRequest.get("customerId").getAsString();
 			String accountNo = balanceRequest.get("accountNo").getAsString();
 
-			// TODO : Add logic to find account balance by CustomerId And
-			// AccountNo
-			Account account = null;
+			Optional<Account> optionalAccount = accountRepository.findAccountByCustomerIdAndAccountNo(customerId,accountNo);
+			if(!optionalAccount.isPresent()) throw new Exception("No Account with that account number and customer Id exists");
+
+			Account account = optionalAccount.get();
 			
 			response.addProperty("balance", account.getBalance());
 			return ResponseEntity.ok().body(gson.toJson(response));

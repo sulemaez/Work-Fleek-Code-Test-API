@@ -46,9 +46,14 @@ public class WebuserController {
 	@PostMapping("/create")
 	public ResponseEntity<?> createWebuser(@RequestBody Webuser webuser) {
 		try {
-			// TODO : Add logic to check if Webuser with provided username, or
-			// email, or employeeId, or customerId exists.
-			// If exists, throw a Webuser with [?] exists Exception.
+
+			String found = "";
+			if(webuserRepository.findByUsername(webuser.getUsername()) != null) found = "username";
+			if(found.equals("") && webuserRepository.findByEmployeeId(webuser.getEmployeeId()).isPresent()) found = "employeeId";
+			if(found.equals("") && webuserRepository.findByCustomerId(webuser.getCustomerId()).isPresent()) found = "customerId";
+			if(found.equals("") && webuserRepository.findByEmail(webuser.getEmail()).isPresent()) found = "Email";
+			if(!found.equals("")) throw new Exception("Webuser with "+found+" exists");
+
 
 			return ResponseEntity.ok().body(webuserRepository.save(webuser));
 		} catch (Exception ex) {

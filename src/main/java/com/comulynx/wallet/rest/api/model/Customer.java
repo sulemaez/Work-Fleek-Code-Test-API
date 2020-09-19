@@ -20,6 +20,7 @@ public class Customer {
 	private String email;
 	@Column(unique = true,nullable = false)
 	private String customerId;
+	private String userName;
 
 	
 	public Customer() {
@@ -42,6 +43,13 @@ public class Customer {
 		this.id = id;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public String getPin() {
 		return pin;
