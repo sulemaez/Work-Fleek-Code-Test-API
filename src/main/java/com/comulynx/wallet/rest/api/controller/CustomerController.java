@@ -1,9 +1,6 @@
 package com.comulynx.wallet.rest.api.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 import com.comulynx.wallet.rest.api.repository.WebuserRepository;
@@ -55,8 +52,12 @@ public class CustomerController {
 	@GetMapping("/{customerId}")
 	public ResponseEntity<Customer> getCustomerByCustomerId(@PathVariable(value = "customerId") String customerId)
 			throws ResourceNotFoundException {
-		Customer customer = customerRepository.findByCustomerId(customerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+
+		Optional<Customer> customerOptional = customerRepository.findByCustomerId(customerId);
+		if(!customerOptional.isPresent()) throw  new ResourceNotFoundException("Customer not found for this id :: " + customerId);
+		Customer customer = customerOptional.get();
+		Account account = accountRepository.findAccountByCustomerId(customerId).get();
+		customer.setAccount(account);
 		return ResponseEntity.ok().body(customer);
 	}
 
@@ -112,6 +113,8 @@ public class CustomerController {
 		customer.setEmail(customerDetails.getEmail());
 		customer.setLastName(customerDetails.getLastName());
 		customer.setFirstName(customerDetails.getFirstName());
+		Account account = accountRepository.findAccountByCustomerIdOrAccountNo(customer.getCustomerId(),"").get();
+		customer.setAccount(account);
 		final Customer updatedCustomer = customerRepository.save(customer);
 		return ResponseEntity.ok(updatedCustomer);
 	}
@@ -134,7 +137,6 @@ public class CustomerController {
 	 * 
 	 */
 	private String generateAccountNo(String customerId) {
-		UUID uniqueKey = UUID.randomUUID();
-		return customerId+"#"+uniqueKey.toString();
+		return System.nanoTime()+"";
 	}
 }

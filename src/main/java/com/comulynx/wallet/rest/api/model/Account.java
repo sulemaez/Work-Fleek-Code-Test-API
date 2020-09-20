@@ -1,11 +1,6 @@
 package com.comulynx.wallet.rest.api.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "accounts")
@@ -15,11 +10,13 @@ public class Account {
 	private long id;
     @Column(unique = true,nullable = false)
     private String accountNo;
+
 	@Column(unique = true,nullable = false)
 	private String customerId;
+
 	@Column(nullable = false)
 	private double balance;
-	
+
 	public Account() {
 		
 	}
@@ -55,6 +52,5 @@ public class Account {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	
-	
+
 }

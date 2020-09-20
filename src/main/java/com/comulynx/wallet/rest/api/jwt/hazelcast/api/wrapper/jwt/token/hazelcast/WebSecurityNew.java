@@ -35,10 +35,9 @@ public class WebSecurityNew extends WebSecurityConfigurerAdapter {
             .cors()
             .and()
                 .authorizeRequests()
-                .antMatchers("/test/v1/**","/test/v2/**","/h2-console/**").permitAll()
+                .antMatchers("/test/v1/**","/h2-console/**","/login").permitAll()
                 .antMatchers("/api/v2/**").authenticated()
             .and()
-
             .addFilter(new JWTAuthenticationFilter(authenticationManager()))
             .addFilter(new JWTAuthorizationFilter(authenticationManager()))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -54,10 +53,16 @@ public class WebSecurityNew extends WebSecurityConfigurerAdapter {
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+
+
+        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addExposedHeader("Authorization");
+
         source.registerCorsConfiguration("/**", config.applyPermitDefaultValues());
-
-
-        // TODO : Expose Authorization Header here
         source.registerCorsConfiguration("/api/v2/**",config.applyPermitDefaultValues());
         return source;
     }

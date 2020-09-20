@@ -48,18 +48,19 @@ public class AccountController {
 	}
 
 	@GetMapping("/balance")
-	public ResponseEntity<?> getAccountBalanceByCustomerIdAndAccountNo(@RequestBody String request)
+	public ResponseEntity<?> getAccountBalanceByCustomerOrAndAccountNo(@RequestBody String request)
 			throws ResourceNotFoundException {
 		try {
 			JsonObject response = new JsonObject();
 
 			final JsonObject balanceRequest = gson.fromJson(request, JsonObject.class);
+
 			String customerId = balanceRequest.get("customerId").getAsString();
 			String accountNo = balanceRequest.get("accountNo").getAsString();
 
 
 			Optional<Account> optionalAccount = accountRepository.findAccountByCustomerIdAndAccountNo(customerId,accountNo);
-			if(!optionalAccount.isPresent()) throw new Exception("No Account with that account number and customer Id exists");
+			if(!optionalAccount.isPresent()) throw new Exception("No Account with that account number or customer Id exists");
 
 			Account account = optionalAccount.get();
 

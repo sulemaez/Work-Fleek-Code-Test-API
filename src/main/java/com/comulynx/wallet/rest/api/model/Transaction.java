@@ -27,6 +27,7 @@ public class Transaction {
 	private String transactionType;
 	@Column(nullable = false)
 	private String debitOrCredit;
+
 	
 	public Transaction() {
 		

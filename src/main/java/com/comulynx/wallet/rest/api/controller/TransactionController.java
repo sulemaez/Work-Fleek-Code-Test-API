@@ -69,7 +69,7 @@ public class TransactionController {
 
 			Pageable pageable = PageRequest.of(0,5);
 			List<Transaction> miniStatement = transactionRepository
-					.getMiniStatementUsingCustomerIdAndAccountNo(customerId, accountNo,pageable).orElse(new ArrayList<>());
+					.getMiniStatementUsingCustomerIdAndAccountNo(customerId, accountNo,pageable).orElseThrow(() ->new ResourceNotFoundException("Account not found"));
 
 			return ResponseEntity.ok().body(gson.toJson(miniStatement));
 		} catch (Exception ex) {

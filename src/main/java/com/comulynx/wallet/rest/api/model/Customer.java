@@ -1,11 +1,6 @@
 package com.comulynx.wallet.rest.api.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "customers")
@@ -21,8 +16,9 @@ public class Customer {
 	@Column(unique = true,nullable = false)
 	private String customerId;
 	private String username;
+	@Transient
+	private Account account;
 
-	
 	public Customer() {
 		
 	}
@@ -84,5 +80,12 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 }
