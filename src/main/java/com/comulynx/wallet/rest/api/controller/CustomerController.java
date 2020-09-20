@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import com.comulynx.wallet.rest.api.repository.WebuserRepository;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,22 +42,9 @@ public class CustomerController {
 	@Autowired
 	private WebuserRepository webuserRepository;
 
-	/**
-	 * 
-	 * Login
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@PostMapping("/login")
-	public ResponseEntity<?> customerLogin(@RequestBody String request) {
-		try {
-			return ResponseEntity.status(200).body(HttpStatus.OK);
-		} catch (Exception ex) {
-			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-		}
-	}
 
 
 	@GetMapping("/")
@@ -70,15 +60,34 @@ public class CustomerController {
 		return ResponseEntity.ok().body(customer);
 	}
 
+	/**
+	 *
+	 * Login
+	 *
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/login")
+	public ResponseEntity<?> customerLogin(@RequestBody String request) {
+		try {
+			return ResponseEntity.status(200).body(HttpStatus.OK);
+		} catch (Exception ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+	}
+
 	@PostMapping("/create")
 	public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
 		try {
 
 			String found = "";
 			if(customerRepository.findByCustomerId(customer.getCustomerId()).isPresent()) found = "Customer ID";
-			if(customerRepository.findByUserName(customer.getUserName()).isPresent()) found = "UserName";
+			if(customerRepository.findByUsername(customer.getUsername()).isPresent()) found = "UserName";
 
 			if(!found.equals(""))throw new Exception("Customer with "+found+ "Exists");
+
+			customer.setPin(bCryptPasswordEncoder.encode(customer.getPin()));
 
 			String accountNo = generateAccountNo(customer.getCustomerId());
 			Account account = new Account();

@@ -57,11 +57,12 @@ public class AccountController {
 			String customerId = balanceRequest.get("customerId").getAsString();
 			String accountNo = balanceRequest.get("accountNo").getAsString();
 
+
 			Optional<Account> optionalAccount = accountRepository.findAccountByCustomerIdAndAccountNo(customerId,accountNo);
 			if(!optionalAccount.isPresent()) throw new Exception("No Account with that account number and customer Id exists");
 
 			Account account = optionalAccount.get();
-			
+
 			response.addProperty("balance", account.getBalance());
 			return ResponseEntity.ok().body(gson.toJson(response));
 		} catch (Exception ex) {

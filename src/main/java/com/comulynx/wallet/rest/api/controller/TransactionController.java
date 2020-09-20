@@ -2,7 +2,6 @@ package com.comulynx.wallet.rest.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.comulynx.wallet.rest.api.exception.ResourceNotFoundException;
 import com.comulynx.wallet.rest.api.model.Transaction;
 import com.comulynx.wallet.rest.api.repository.TransactionRepository;
@@ -57,7 +55,6 @@ public class TransactionController {
 
 	/**
 	 * Should return last 5 transactions from the database
-	 * 
 	 * @param request
 	 * @return
 	 * @throws ResourceNotFoundException

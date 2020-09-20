@@ -58,7 +58,7 @@ public class WebSecurityNew extends WebSecurityConfigurerAdapter {
 
 
         // TODO : Expose Authorization Header here
-
+        source.registerCorsConfiguration("/api/v2/**",config.applyPermitDefaultValues());
         return source;
     }
 

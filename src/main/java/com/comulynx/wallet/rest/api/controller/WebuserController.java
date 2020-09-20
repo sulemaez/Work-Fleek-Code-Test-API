@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,9 @@ public class WebuserController {
 
 	@Autowired
 	private WebuserRepository webuserRepository;
+
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@GetMapping
 	public List<Webuser> getAllWebusers() {
@@ -54,6 +58,7 @@ public class WebuserController {
 			if(found.equals("") && webuserRepository.findByEmail(webuser.getEmail()).isPresent()) found = "Email";
 			if(!found.equals("")) throw new Exception("Webuser with "+found+" exists");
 
+            webuser.setPassword(bCryptPasswordEncoder.encode(webuser.getPassword()));
 
 			return ResponseEntity.ok().body(webuserRepository.save(webuser));
 		} catch (Exception ex) {
