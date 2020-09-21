@@ -3,7 +3,7 @@
 <h4>SETUP</h4>
 
 <h6>Requirements</h6>
-<p>Java 8+An    </p>
+<p>Java 8+    </p>
 <p>Maven 3</p>
 
 <h6>Run</h6>
