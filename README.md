@@ -8,8 +8,7 @@
 
 <h6>Run</h6>
 
-<p>In Project folder run</p>
-<p> mvn spring-boot:run </p>
+<p>In Project folder run "mvn spring-boot:run"</p>
 <p>This will download all the dependencies in the pom.xml if running for the first time </p>
 <p>The webserver opens at port 8595</p>
 
