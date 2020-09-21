@@ -1,5 +1,6 @@
 package com.comulynx.wallet.rest.api.model;
 
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -16,12 +17,11 @@ public class Customer {
 	@Column(unique = true,nullable = false)
 	private String customerId;
 	private String username;
+
 	@Transient
 	private Account account;
 
-	public Customer() {
-		
-	}
+	public Customer() { }
 
 	public String getCustomerId() {
 		return customerId;

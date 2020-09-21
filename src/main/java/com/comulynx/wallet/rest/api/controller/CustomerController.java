@@ -1,11 +1,12 @@
 package com.comulynx.wallet.rest.api.controller;
 
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import com.comulynx.wallet.rest.api.repository.WebuserRepository;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.comulynx.wallet.rest.api.exception.ResourceNotFoundException;
 import com.comulynx.wallet.rest.api.model.Account;
 import com.comulynx.wallet.rest.api.model.Customer;
@@ -33,20 +33,24 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerRepository customerRepository;
-	@Autowired
-	private AccountRepository accountRepository;
 
 	@Autowired
-	private WebuserRepository webuserRepository;
+	private AccountRepository accountRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-
-	@GetMapping("/")
+	@GetMapping({ "/" , ""})
 	public List<Customer> getAllCustomers() {
-		return customerRepository.findAll();
+
+		List<Customer> customers = customerRepository.findAll().stream().map( cs -> {
+			Account account = accountRepository.findAccountByCustomerId(cs.getCustomerId()).get();
+			cs.setAccount(account);
+			return cs;
+		}).collect(Collectors.toList());
+
+		return customers;
 	}
 
 	@GetMapping("/{customerId}")
